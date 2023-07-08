@@ -36,7 +36,7 @@ public class AgendaController {
 		agenda.setNome(dto.getNome());
 		agenda.setData(dto.getData());
 		agenda.setHorario(dto.getHorario());
-		agenda.setContato(dto.getContato());
+		agenda.setTelefone(dto.getTelefone());
 		agenda.setCompromisso(dto.getCompromisso());
 		return agenda;
 	}
@@ -45,13 +45,13 @@ public class AgendaController {
 	public ResponseEntity<List<Agenda>> buscar(@RequestParam(value = "nome", required = false) String nome,
 			@RequestParam(value = "data", required = false) LocalDate data,
 			@RequestParam(value = "horario", required = false) Integer horario,
-			@RequestParam(value = "contato", required = false) String contato,
+			@RequestParam(value = "telefone", required = false) String telefone,
 			@RequestParam(value = "compromisso", required = false) String compromisso) {
 		Agenda agendaFiltro = new Agenda();
 		agendaFiltro.setNome(nome);
 		agendaFiltro.setData(data);
 		agendaFiltro.setHorario(horario);
-		agendaFiltro.setContato(contato);
+		agendaFiltro.setTelefone(telefone);
 		agendaFiltro.setCompromisso(compromisso);
 		List<Agenda> agendas = _service.buscar(agendaFiltro);
 		return ResponseEntity.ok(agendas);

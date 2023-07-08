@@ -24,20 +24,20 @@ public class Agenda {
 	private LocalDate data;
 	@Column(name = "horario", nullable = false)
 	private Integer horario;
-	@Column(name = "contato", nullable = false)
-	private String contato;
+	@Column(name = "telefone", nullable = false)
+	private String telefone;
 	@Column(name = "compromisso", nullable = false)
 	private String compromisso;
 
 	public Agenda() {
 	}
 
-	public Agenda(Long id, String nome, LocalDate data, Integer horario, String contato, String compromisso) {
+	public Agenda(Long id, String nome, LocalDate data, Integer horario, String telefone, String compromisso) {
 		this.id = id;
 		this.nome = nome;
 		this.data = data;
 		this.horario = horario;
-		this.contato = contato;
+		this.telefone = telefone;
 		this.compromisso = compromisso;
 	}
 
@@ -73,12 +73,12 @@ public class Agenda {
 		this.horario = horario;
 	}
 
-	public String getContato() {
-		return contato;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setContato(String contato) {
-		this.contato = contato;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public String getCompromisso() {

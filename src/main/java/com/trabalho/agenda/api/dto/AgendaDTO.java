@@ -10,7 +10,7 @@ public class AgendaDTO {
 	private String nome;
 	private LocalDate data;
 	private Integer horario;
-	private String contato;
+	private String telefone;
 	private String compromisso;
 
 	public AgendaDTO() {
@@ -21,7 +21,7 @@ public class AgendaDTO {
 		this.nome = entity.getNome();
 		this.data = entity.getData();
 		this.horario = entity.getHorario();
-		this.contato = entity.getContato();
+		this.telefone = entity.getTelefone();
 		this.compromisso = entity.getCompromisso();
 	}
 
@@ -57,12 +57,12 @@ public class AgendaDTO {
 		this.horario = horario;
 	}
 
-	public String getContato() {
-		return contato;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setContato(String contato) {
-		this.contato = contato;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public String getCompromisso() {
