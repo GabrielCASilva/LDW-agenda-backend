@@ -3,13 +3,20 @@ package com.trabalho.agenda.api.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.trabalho.agenda.api.dto.AgendaDTO;
+import com.trabalho.agenda.exceptions.RegraNegocioException;
 import com.trabalho.agenda.model.entity.Agenda;
 import com.trabalho.agenda.service.AgendaService;
 
@@ -48,5 +55,40 @@ public class AgendaController {
 		agendaFiltro.setCompromisso(compromisso);
 		List<Agenda> agendas = _service.buscar(agendaFiltro);
 		return ResponseEntity.ok(agendas);
+	}
+
+	@PostMapping("/registro")
+	public ResponseEntity<?> salvar(@RequestBody AgendaDTO dto) {
+		try {
+			Agenda entidadeAgenda = converter(dto);
+			entidadeAgenda = _service.salvar(entidadeAgenda);
+			return ResponseEntity.ok(entidadeAgenda);
+		} catch (RegraNegocioException regraNegocioException) {
+			return ResponseEntity.badRequest().body(regraNegocioException.getMessage());
+		}
+	}
+
+	@PutMapping("/registro/{id}")
+	public ResponseEntity<? extends Object> atualizar(@PathVariable("id") Long id, @RequestBody AgendaDTO dto) {
+		return _service.consultarPorId(id).map(entity -> {
+			try {
+				Agenda agenda = converter(dto);
+				agenda.setId(entity.getId());
+				_service.atualizar(agenda);
+				return ResponseEntity.ok(agenda);
+			} catch (RegraNegocioException regraNegocioException) {
+				return ResponseEntity.badRequest().body(regraNegocioException.getMessage());
+			}
+		}).orElseGet(() -> ResponseEntity.badRequest()
+				.body("O id do registro informado não foi encontrado na base de dados"));
+	}
+
+	@DeleteMapping("/registro/{id}")
+	public ResponseEntity<?> deletar(@PathVariable("id") Long id) {
+		return _service.consultarPorId(id).map(entity -> {
+			_service.deletar(entity);
+			return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+		}).orElseGet(() -> ResponseEntity.badRequest()
+				.body("O id do registro informado não foi encontrado na base de dados"));
 	}
 }
