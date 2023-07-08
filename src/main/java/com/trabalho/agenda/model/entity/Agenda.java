@@ -29,6 +29,9 @@ public class Agenda {
 	@Column(name = "compromisso", nullable = false)
 	private String compromisso;
 
+	public Agenda() {
+	}
+
 	public Agenda(Long id, String nome, LocalDate data, Integer horario, String contato, String compromisso) {
 		this.id = id;
 		this.nome = nome;
