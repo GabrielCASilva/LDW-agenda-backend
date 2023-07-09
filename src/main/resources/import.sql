@@ -1,0 +1,1 @@
+INSERT INTO agenda.agenda (nome, data, telefone, compromisso, horario) VALUES ('Passeio', '2023-07-09', '(21) 97193-8998', 'passeio no parque com o cachorro', 10)
