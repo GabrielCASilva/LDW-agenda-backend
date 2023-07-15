@@ -51,7 +51,7 @@ public class AgendaController {
 			throw new IllegalArgumentException("O agendamento não da para ter uma data anterior a data de hoje");
 		}
 
-		if (dto.getHorario() < LocalDateTime.now().getHour()) {
+		if (dto.getData().equals(LocalDate.now()) && dto.getHorario() < LocalDateTime.now().getHour()) {
 			throw new IllegalArgumentException("O agendamento não pode ter um horário anterior ao horário atual");
 		}
 	}
