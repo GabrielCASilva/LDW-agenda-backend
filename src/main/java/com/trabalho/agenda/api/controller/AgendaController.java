@@ -1,6 +1,7 @@
 package com.trabalho.agenda.api.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ import com.trabalho.agenda.api.dto.AgendaDTO;
 import com.trabalho.agenda.exceptions.RegraNegocioException;
 import com.trabalho.agenda.model.entity.Agenda;
 import com.trabalho.agenda.service.AgendaService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/agenda")
@@ -43,6 +46,16 @@ public class AgendaController {
 		return agenda;
 	}
 
+	private void verificarDataHora(AgendaDTO dto) {
+		if (dto.getData().isBefore(LocalDate.now())) {
+			throw new IllegalArgumentException("O agendamento não da para ter uma data anterior a data de hoje");
+		}
+
+		if (dto.getHorario() < LocalDateTime.now().getHour()) {
+			throw new IllegalArgumentException("O agendamento não pode ter um horário anterior ao horário atual");
+		}
+	}
+
 	@GetMapping("/registro")
 	public ResponseEntity<List<Agenda>> buscar(@RequestParam(value = "nome", required = false) String nome,
 			@RequestParam(value = "data", required = false) LocalDate data,
@@ -60,20 +73,22 @@ public class AgendaController {
 	}
 
 	@PostMapping("/registro")
-	public ResponseEntity<?> salvar(@RequestBody AgendaDTO dto) {
+	public ResponseEntity<?> salvar(@Valid @RequestBody AgendaDTO dto) {
 		try {
+			verificarDataHora(dto);
 			Agenda entidadeAgenda = converter(dto);
 			entidadeAgenda = _service.salvar(entidadeAgenda);
 			return ResponseEntity.ok(entidadeAgenda);
-		} catch (RegraNegocioException regraNegocioException) {
-			return ResponseEntity.badRequest().body(regraNegocioException.getMessage());
+		} catch (RegraNegocioException exception) {
+			return ResponseEntity.badRequest().body(exception.getMessage());
 		}
 	}
 
 	@PutMapping("/registro/{id}")
-	public ResponseEntity<? extends Object> atualizar(@PathVariable("id") Long id, @RequestBody AgendaDTO dto) {
+	public ResponseEntity<? extends Object> atualizar(@PathVariable("id") Long id, @Valid @RequestBody AgendaDTO dto) {
 		return _service.consultarPorId(id).map(entity -> {
 			try {
+				verificarDataHora(dto);
 				Agenda agenda = converter(dto);
 				agenda.setId(entity.getId());
 				_service.atualizar(agenda);
@@ -82,7 +97,7 @@ public class AgendaController {
 				return ResponseEntity.badRequest().body(regraNegocioException.getMessage());
 			}
 		}).orElseGet(() -> ResponseEntity.badRequest()
-				.body("O id do registro informado não foi encontrado na base de dados"));
+				.body("O id do agendamento informado não foi encontrado na base de dados"));
 	}
 
 	@DeleteMapping("/registro/{id}")
@@ -91,6 +106,6 @@ public class AgendaController {
 			_service.deletar(entity);
 			return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
 		}).orElseGet(() -> ResponseEntity.badRequest()
-				.body("O id do registro informado não foi encontrado na base de dados"));
+				.body("O id do agendamento informado não foi encontrado na base de dados"));
 	}
 }

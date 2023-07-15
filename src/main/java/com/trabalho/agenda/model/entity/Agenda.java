@@ -106,4 +106,9 @@ public class Agenda {
 		return Objects.equals(id, other.id);
 	}
 
+	@Override
+	public String toString() {
+		return "Pessoa [nome = " + nome + "]";
+	}
+
 }

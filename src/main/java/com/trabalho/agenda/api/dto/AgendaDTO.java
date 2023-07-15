@@ -2,15 +2,25 @@ package com.trabalho.agenda.api.dto;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.trabalho.agenda.model.entity.Agenda;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class AgendaDTO {
 
 	private Long id;
+	@NotBlank(message = "O nome não pode estar em branco!")
 	private String nome;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate data;
+	@NotNull(message = "O horário não pode ser nulo!")
 	private Integer horario;
+	@NotBlank(message = "O telefone não pode estar em branco!")
 	private String telefone;
+	@NotBlank(message = "O compromisso não pode estar em branco!")
 	private String compromisso;
 
 	public AgendaDTO() {
